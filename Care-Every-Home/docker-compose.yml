@@ -1,0 +1,50 @@
+version: "3.9"
+
+services:
+  db:
+    image: postgres:14
+    container_name: postgres_db
+    environment:
+      - POSTGRES_DB=django_db
+      - POSTGRES_USER=django_user
+      - POSTGRES_PASSWORD=django_pass
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile.django
+    container_name: django_app
+    volumes:
+      - .:/usr/src/app  # การเชื่อมโยงโฟลเดอร์จากเครื่องโฮสต์ไปยังคอนเทนเนอร์
+    ports:
+      - "8000:8000"
+    environment:
+      - POSTGRES_DB=django_db
+      - POSTGRES_USER=django_user
+      - POSTGRES_PASSWORD=django_pass
+      - POSTGRES_HOST=db
+    depends_on:
+      - db
+    command: >
+      sh -c "if [ ! -f manage.py ]; then
+        django-admin startproject myproject .;
+      fi && python manage.py runserver 0.0.0.0:8000"
+
+  jupyter:
+    build:
+      context: .
+      dockerfile: Dockerfile.jupyter
+    container_name: jupyter_app
+    volumes:
+      - .:/usr/src/app
+    ports:
+      - "8888:8888"
+    depends_on:
+      - db
+
+volumes:
+  db_data:  # กำหนด volume สำหรับฐานข้อมูล PostgreSQL

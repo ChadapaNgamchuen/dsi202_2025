@@ -1,0 +1,23 @@
+FROM python:3.9
+
+# กำหนด working directory ในคอนเทนเนอร์
+WORKDIR /usr/src/app
+
+# คัดลอกไฟล์ requirements.txt และติดตั้ง dependencies
+COPY requirements.txt /usr/src/app/
+RUN pip install --no-cache-dir -r requirements_django.txt
+
+# คัดลอกไฟล์โปรเจคทั้งหมดไปยังคอนเทนเนอร์
+COPY . /usr/src/app/
+
+# คัดลอกไฟล์ entrypoint.sh ไปยังคอนเทนเนอร์
+# COPY entrypoint.sh /usr/src/app/
+
+# ทำให้ entrypoint.sh สามารถรันได้
+# RUN chmod +x /usr/src/app/entrypoint.sh
+
+# ตั้งค่า entrypoint ให้รันไฟล์ entrypoint.sh
+ENTRYPOINT ["/usr/src/app/entrypoint.sh"]
+
+# คำสั่งเริ่มต้นเมื่อคอนเทนเนอร์เริ่ม
+CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
