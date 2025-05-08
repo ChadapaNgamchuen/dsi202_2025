@@ -1,0 +1,28 @@
+<form method="post">
+    {% csrf_token %}
+    <label>ชื่อผู้เช่า:</label>
+    <input type="text" name="customer_name" required><br><br>
+    
+    <label>จำนวนเดือน:</label>
+    <input type="number" name="months" min="1" required><br><br>
+  
+    <button type="submit">ยืนยันการเช่า</button>
+  </form>
+  
+  <a href="{% url 'equipment_list' %}">← Back to Equipments</a>
+    <a href="{% url 'home' %}">← Back to Home</a>
+    
+    {% if error_message %}
+        <p style="color: red;">{{ error_message }}</p>
+    {% endif %}
+    
+    {% if success_message %}
+        <p style="color: green;">{{ success_message }}</p>
+    {% endif %}
+    {% if booking %}
+        <p>Booking ID: {{ booking.id }}</p>
+        <p>Customer Name: {{ booking.customer_name }}</p>
+        <p>Equipment: {{ booking.equipment.name }}</p>
+        <p>Rental Price: ฿{{ booking.rental_price }}</p>
+        <p>Rental Period: {{ booking.months }} months</p>
+    {% endif %}

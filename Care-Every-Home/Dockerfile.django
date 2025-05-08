@@ -4,7 +4,7 @@ FROM python:3.9
 WORKDIR /usr/src/app
 
 # คัดลอกไฟล์ requirements.txt และติดตั้ง dependencies
-COPY requirements.txt /usr/src/app/
+COPY requirements_django.txt /usr/src/app/
 RUN pip install --no-cache-dir -r requirements_django.txt
 
 # คัดลอกไฟล์โปรเจคทั้งหมดไปยังคอนเทนเนอร์

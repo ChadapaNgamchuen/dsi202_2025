@@ -1,0 +1,66 @@
+{% extends 'myapp/base.html' %}
+{% block title %}{{ equipment.name }} Details{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto px-4 py-8">
+  <h1 class="text-4xl font-bold text-black-700 mb-6">{{ equipment.name }}</h1>
+  
+  <div class="bg-white p-6 rounded-2xl shadow-lg grid md:grid-cols-2 gap-6 items-start">
+    <!-- Equipment Image -->
+    {% if equipment.image %}
+      <img src="{{ equipment.image.url }}" alt="{{ equipment.name }}" class="w-full rounded-xl object-cover max-h-[400px] self-center">
+    {% else %}
+      <div class="w-full h-64 bg-gray-100 rounded-xl flex items-center justify-center text-gray-400 text-sm">
+        No image available
+      </div>
+    {% endif %}
+
+    <!-- Equipment Info -->
+    <div class="space-y-4 text-lg text-gray-700">
+      <div class="mt-8 text-center flex justify-end">
+        <a href="#"
+        class="bg-blue-600 text-white py-1.5 px-4 rounded-lg text-sm hover:bg-blue-700 transition">
+          Add+
+        </a>
+      </div>
+      <p><strong class="text-gray-800">Rental Price:</strong> ฿{{ equipment.rental_price }}</p>
+
+      <p>
+        <strong class="text-gray-800">Available:</strong>
+        {% if equipment.status == 'available' %}
+          <span class="text-green-600 font-medium">Yes</span>
+        {% else %}
+          <span class="text-red-600 font-medium">No</span>
+        {% endif %}
+      </p>
+
+      <p>
+        <strong class="text-gray-800">Stock:</strong>
+        {% if equipment.stock <= 0 %}
+          <span class="text-red-600 font-medium">{{ equipment.stock }}</span>
+        {% else %}
+          <span class="text-green-600 font-medium">{{ equipment.stock }}</span>
+        {% endif %}
+      </p>
+
+      <p>
+        <strong class="text-gray-800">Description:</strong><br>
+        <span class="block mt-1">{{ equipment.description }}</span>
+      </p>
+    </div>
+    <div class="mt-8 text-center">
+      <a href="#"
+         class="inline-block bg-blue-600 text-white py-3 px-6 rounded-xl text-lg hover:bg-blue-700 transition">
+        Rent Now
+      </a>
+    </div>
+  </div>
+
+  <!-- Back Button -->
+  <div class="mt-8 text-center">
+    <a href="{% url 'equipment_list' %}" class="inline-block text-blue-600 hover:text-blue-800 transition font-medium underline">
+      ← Back to Equipment List
+    </a>
+  </div>
+</div>
+{% endblock %}
