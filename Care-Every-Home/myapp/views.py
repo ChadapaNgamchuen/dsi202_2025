@@ -1,10 +1,16 @@
 # myapp/views.py
 from django.shortcuts import render
-from django.views.generic import ListView, DetailView,BookingCreateView
 from .models import Equipment
 from django.db.models import Q  # For complex queries
 from django.views import View
 from django.shortcuts import get_object_or_404
+from django.views.generic import ListView, DetailView, CreateView, UpdateView
+from django.views.generic.edit import CreateView
+from .models import Donation
+from .forms import DonationForm
+from django.urls import reverse_lazy
+
+
 
 def home(request):
     return render(request, 'myapp/home.html')
@@ -45,8 +51,14 @@ class EquipmentSearchView(View):
 class  BookingCreateView(View):
     def get(self, request, equipment_id):
         equipment = get_object_or_404(Equipment, id=equipment_id)
-        return render(request, 'myapp/booking_form.html', {'equipment': equipment})
+        return render(request, 'myapp/booking_create.html', {'equipment': equipment})
 
     def post(self, request, equipment_id):
         # Handle booking creation logic here
         pass
+
+class DonationCreateView(CreateView):
+    model = Donation
+    form_class = DonationForm
+    template_name = 'donate.html'
+    success_url = reverse_lazy('donate_success')

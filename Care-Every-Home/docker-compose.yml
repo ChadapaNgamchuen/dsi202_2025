@@ -34,17 +34,6 @@ services:
         django-admin startproject myproject .;
       fi && python manage.py runserver 0.0.0.0:8000"
 
-  jupyter:
-    build:
-      context: .
-      dockerfile: Dockerfile.jupyter
-    container_name: jupyter_app
-    volumes:
-      - .:/usr/src/app
-    ports:
-      - "8888:8888"
-    depends_on:
-      - db
-
+  
 volumes:
   db_data:  # กำหนด volume สำหรับฐานข้อมูล PostgreSQL

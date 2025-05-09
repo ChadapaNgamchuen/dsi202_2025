@@ -25,7 +25,9 @@ class Equipment(models.Model):
 class Booking(models.Model):
     equipment = models.ForeignKey(Equipment, on_delete=models.CASCADE)
     name = models.CharField(max_length=255)
-    phone = models.CharField(max_length=20)
+    email = models.EmailField()
+    address = models.TextField()
+    phone = models.CharField(max_length=20, blank=True)
     rental_period = models.IntegerField(help_text="จำนวนเดือนที่ต้องการเช่า")
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -54,14 +56,16 @@ class Rental(models.Model):
         return f"Rental {self.id} - {self.user.name}"
 
 class Donation(models.Model):
-    shopkeeper = models.ForeignKey(Shopkeeper, on_delete=models.CASCADE, related_name='donations')
-    equipment_name = models.CharField(max_length=255)
-    category = models.CharField(max_length=100)
-    status = models.CharField(max_length=50, choices=[('new', 'New'), ('used', 'Used')])
-    approved = models.BooleanField(default=False)
+    donor_name = models.CharField(max_length=100)
+    email = models.EmailField()
+    phone = models.CharField(max_length=20, blank=True)
+    equipment_name = models.CharField(max_length=200)
+    quantity = models.PositiveIntegerField()
+    description = models.TextField(blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return self.equipment_name
+        return f"{self.donor_name} - {self.equipment_name}"
 
 class Payment(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='payments')
@@ -73,5 +77,3 @@ class Payment(models.Model):
 
     def __str__(self):
         return f"Payment {self.id} - {self.user.name}"
-
-# Create your models here.

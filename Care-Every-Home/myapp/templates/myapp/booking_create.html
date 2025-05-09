@@ -1,28 +1,73 @@
-<form method="post">
-    {% csrf_token %}
-    <label>ชื่อผู้เช่า:</label>
-    <input type="text" name="customer_name" required><br><br>
-    
-    <label>จำนวนเดือน:</label>
-    <input type="number" name="months" min="1" required><br><br>
-  
-    <button type="submit">ยืนยันการเช่า</button>
-  </form>
-  
-  <a href="{% url 'equipment_list' %}">← Back to Equipments</a>
-    <a href="{% url 'home' %}">← Back to Home</a>
-    
-    {% if error_message %}
-        <p style="color: red;">{{ error_message }}</p>
+{% extends 'myapp/base.html' %}
+{% block title %}Book {{ equipment.name }}{% endblock %}
+{% block content %}
+<div class="max-w-lg mx-auto mt-10 p-6 bg-white rounded-2xl shadow-lg">
+    <h2 class="text-3xl font-bold text-gray-800 mb-6 text-center">Book {{ equipment.name }}</h2>
+
+    <!-- แสดงข้อความจาก messages -->
+    {% if messages %}
+        <div class="mb-6">
+            {% for message in messages %}
+                <p class="p-3 rounded-lg {% if message.tags == 'error' %}bg-red-100 text-red-700{% else %}bg-green-100 text-green-700{% endif %}">
+                    {{ message }}
+                </p>
+            {% endfor %}
+        </div>
     {% endif %}
-    
-    {% if success_message %}
-        <p style="color: green;">{{ success_message }}</p>
-    {% endif %}
+
+    <!-- ฟอร์มจอง -->
+    <form method="post" class="space-y-5">
+        {% csrf_token %}
+        <div>
+            <label for="name" class="block text-sm font-medium text-gray-700">ชื่อผู้เช่า</label>
+            <input type="text" name="name" id="name" required
+                   class="mt-1 w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+                   placeholder="กรอกชื่อ-นามสกุล">
+        </div>
+        <div>
+            <label for="email" class="block text-sm font-medium text-gray-700">อีเมล (Gmail หรืออื่นๆ)</label>
+            <input type="email" name="email" id="email" required
+                   class="mt-1 w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+                   placeholder="กรอกอีเมล เช่น example@gmail.com">
+        </div>
+        <div>
+            <label for="address" class="block text-sm font-medium text-gray-700">ที่อยู่</label>
+            <textarea name="address" id="address" required rows="4"
+                      class="mt-1 w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+                      placeholder="กรอกที่อยู่สำหรับจัดส่ง"></textarea>
+        </div>
+        <div>
+            <label for="rental_period" class="block text-sm font-medium text-gray-700">จำนวนเดือน</label>
+            <input type="number" name="rental_period" id="rental_period" min="1" required
+                   class="mt-1 w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+                   placeholder="กรอกจำนวนเดือนที่ต้องการเช่า">
+        </div>
+        <button type="submit"
+                class="w-full bg-blue-600 text-white py-3 px-4 rounded-lg hover:bg-blue-700 transition font-medium">
+            ยืนยันการเช่า
+        </button>
+    </form>
+
+    <!-- แสดงข้อมูลการจองถ้ามี -->
     {% if booking %}
-        <p>Booking ID: {{ booking.id }}</p>
-        <p>Customer Name: {{ booking.customer_name }}</p>
-        <p>Equipment: {{ booking.equipment.name }}</p>
-        <p>Rental Price: ฿{{ booking.rental_price }}</p>
-        <p>Rental Period: {{ booking.months }} months</p>
+        <div class="mt-8 p-6 bg-gray-50 rounded-lg">
+            <h3 class="text-xl font-semibold text-gray-800 mb-4">รายละเอียดการจอง</h3>
+            <div class="space-y-2 text-gray-700">
+                <p><strong>Booking ID:</strong> {{ booking.id }}</p>
+                <p><strong>ชื่อผู้เช่า:</strong> {{ booking.name }}</p>
+                <p><strong>อีเมล:</strong> {{ booking.email }}</p>
+                <p><strong>ที่อยู่:</strong> {{ booking.address }}</p>
+                <p><strong>อุปกรณ์:</strong> {{ booking.equipment.name }}</p>
+                <p><strong>ราคาเช่า:</strong> ฿{{ booking.equipment.rental_price }} ต่อเดือน</p>
+                <p><strong>ระยะเวลาเช่า:</strong> {{ booking.rental_period }} เดือน</p>
+            </div>
+        </div>
     {% endif %}
+
+    <!-- ลิงก์กลับ -->
+    <div class="mt-6 text-center space-x-4">
+        <a href="{% url 'equipment_list' %}" class="text-blue-600 hover:underline font-medium">← กลับไปยังรายการอุปกรณ์</a>
+        <a href="{% url 'home' %}" class="text-blue-600 hover:underline font-medium">← กลับไปยังหน้าหลัก</a>
+    </div>
+</div>
+{% endblock %}
