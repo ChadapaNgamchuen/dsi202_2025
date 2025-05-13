@@ -77,39 +77,40 @@
         {% for product in products %}
           <div class="block bg-white p-6 rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:scale-105 flex flex-col relative">
             <!-- Favorite and Cart Buttons -->
-            {% if user.is_authenticated %}
-              <!-- Favorite Button -->
-              <form action="{% url 'toggle_favorite' product.pk %}" method="post" class="absolute top-2 right-2">
-                {% csrf_token %}
-                <button type="submit" class="focus:outline-none">
-                  {% if product.id in user_favorites %}
-                    <i class="fas fa-heart text-red-500 text-2xl"></i>
-                  {% else %}
-                    <i class="far fa-heart text-gray-500 text-2xl hover:text-red-500"></i>
-                  {% endif %}
-                </button>
-              </form>
-              <!-- Add to Cart Button -->
-              <form action="{% url 'toggle_cart' product.pk %}" method="post" class="absolute top-10 right-2">
-                {% csrf_token %}
-                <button type="submit" class="focus:outline-none">
-                  {% if product.id in user_cart %}
-                    <i class="fas fa-cart-arrow-down text-[#009aa6] text-2xl"></i>
-                  {% else %}
-                    <i class="fas fa-cart-plus text-gray-500 text-2xl hover:text-[#009aa6]"></i>
-                  {% endif %}
-                </button>
-              </form>
-            {% endif %}
+            <!-- Favorite Button -->
+            <form action="{% url 'toggle_favorite' product.pk %}" method="post" class="absolute top-2 right-2 z-20">
+              {% csrf_token %}
+              <button type="submit" class="focus:outline-none">
+                {% if product.id in user_favorites %}
+                  <i class="fas fa-heart text-red-500 text-2xl"></i>
+                {% else %}
+                  <i class="far fa-heart text-gray-500 text-2xl hover:text-red-500"></i>
+                {% endif %}
+              </button>
+            </form>
+
+            <!-- Add to Cart Button -->
+            <form action="{% url 'toggle_cart' product.pk %}" method="post" class="absolute top-10 right-2 z-20">
+              {% csrf_token %}
+              <button type="submit" class="focus:outline-none">
+                {% if product.id in user_cart %}
+                  <i class="fas fa-cart-arrow-down text-[#009aa6] text-2xl"></i>
+                {% else %}
+                  <i class="fas fa-cart-plus text-gray-500 text-2xl hover:text-[#009aa6]"></i>
+                {% endif %}
+              </button>
+            </form>
+
             <a href="{% url 'product_detail' product.pk %}" class="flex flex-col flex-grow">
               {% if product.image %}
-                <div class="aspect-w-1 aspect-h-1 w-full mb-4">
-                  <img 
-                    src="{{ product.image.url }}" 
-                    alt="{{ product.name }}" 
-                    class="w-full h-full object-cover rounded-lg"
-                  />
-                </div>
+              <div class="aspect-w-1 aspect-h-1 w-full mb-4 relative z-10">
+                <img 
+                  src="{{ product.image.url }}" 
+                  alt="{{ product.name }}" 
+                  class="w-full h-full object-cover rounded-lg"
+                />
+              </div>
+              
               {% else %}
                 <div class="w-full h-48 bg-gray-100 rounded-lg mb-4 flex items-center justify-center">
                   <span class="text-gray-500">No Image</span>

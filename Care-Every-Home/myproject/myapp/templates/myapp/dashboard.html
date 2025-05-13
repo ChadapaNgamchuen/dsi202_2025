@@ -1,67 +1,79 @@
-<!-- /myproject/myapp/templates/myapp/dashboard.html -->
 {% extends 'myapp/base.html' %}
 {% block title %}Dashboard{% endblock %}
+
 {% block content %}
-    <h1 class="text-3xl font-bold text-gray-800 mb-6">Dashboard</h1>
+  <!-- Page Header -->
+  <div class="mb-10">
+    <h1 class="text-4xl font-extrabold text-slate-800 tracking-tight flex items-center gap-3">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-9 w-9 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h4v11H3zM17 3h4v18h-4zM10 14h4v7h-4z" />
+      </svg>
+      Dashboard
+    </h1>
+    <p class="text-slate-500 text-sm mt-1">Overview of product availability and recent rentals</p>
+  </div>
 
-    <!-- Statistics Cards -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        <div class="bg-white p-6 rounded shadow flex flex-col items-center">
-            <h2 class="text-xl font-semibold text-gray-700">Total Products</h2>
-            <p class="text-3xl font-bold text-blue-600">{{ total_products }}</p>
-        </div>
-        <div class="bg-white p-6 rounded shadow flex flex-col items-center">
-            <h2 class="text-xl font-semibold text-gray-700">Available Products</h2>
-            <p class="text-3xl font-bold text-green-600">{{ available_products }}</p>
-        </div>
-        <div class="bg-white p-6 rounded shadow flex flex-col items-center">
-            <h2 class="text-xl font-semibold text-gray-700">Unavailable Products</h2>
-            <p class="text-3xl font-bold text-red-600">{{ unavailable_products }}</p>
-        </div>
-        <div class="bg-white p-6 rounded shadow flex flex-col items-center">
-            <h2 class="text-xl font-semibold text-gray-700">Total Rentals</h2>
-            <p class="text-3xl font-bold text-blue-600">{{ total_rentals }}</p>
-        </div>
-        <div class="bg-white p-6 rounded shadow flex flex-col items-center">
-            <h2 class="text-xl font-semibold text-gray-700">Total Revenue</h2>
-            <p class="text-3xl font-bold text-green-600">${{ total_revenue|floatformat:2 }}</p>
-        </div>
+  <!-- ✨ Statistics Cards -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+    {% comment %} Static Cards - could be dynamic {% endcomment %}
+    <div class="bg-gradient-to-br from-white to-slate-50 hover:shadow-xl transition-all duration-300 p-6 rounded-2xl shadow flex flex-col items-center text-center">
+      <h2 class="text-base font-medium text-slate-600">Total Products</h2>
+      <p class="text-4xl font-extrabold text-sky-600 mt-2">{{ total_products }}</p>
     </div>
+    <div class="bg-gradient-to-br from-white to-slate-50 hover:shadow-xl transition-all duration-300 p-6 rounded-2xl shadow flex flex-col items-center text-center">
+      <h2 class="text-base font-medium text-slate-600">Available</h2>
+      <p class="text-4xl font-extrabold text-emerald-500 mt-2">{{ available_products }}</p>
+    </div>
+    <div class="bg-gradient-to-br from-white to-slate-50 hover:shadow-xl transition-all duration-300 p-6 rounded-2xl shadow flex flex-col items-center text-center">
+      <h2 class="text-base font-medium text-slate-600">Unavailable</h2>
+      <p class="text-4xl font-extrabold text-rose-500 mt-2">{{ unavailable_products }}</p>
+    </div>
+    <div class="bg-gradient-to-br from-white to-slate-50 hover:shadow-xl transition-all duration-300 p-6 rounded-2xl shadow flex flex-col items-center text-center">
+      <h2 class="text-base font-medium text-slate-600">Total Rentals</h2>
+      <p class="text-4xl font-extrabold text-indigo-500 mt-2">{{ total_rentals }}</p>
+    </div>
+    <div class="bg-gradient-to-br from-white to-slate-50 hover:shadow-xl transition-all duration-300 p-6 rounded-2xl shadow flex flex-col items-center text-center col-span-1 sm:col-span-2 lg:col-span-4">
+      <h2 class="text-base font-medium text-slate-600">Total Revenue</h2>
+      <p class="text-4xl font-extrabold text-green-500 mt-2">${{ total_revenue|floatformat:2 }}</p>
+    </div>
+  </div>
 
-    <!-- Recent Rentals -->
-    <div class="bg-white p-6 rounded shadow">
-        <h2 class="text-2xl font-semibold text-gray-800 mb-4">Recent Rentals</h2>
-        {% if recent_rentals %}
-            <table class="w-full text-left">
-                <thead>
-                    <tr class="bg-gray-100">
-                        <th class="p-3">User</th>
-                        <th class="p-3">Product</th>
-                        <th class="p-3">Start Time</th>
-                        <th class="p-3">End Time</th>
-                        <th class="p-3">Total Fee</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for rental in recent_rentals %}
-                        <tr class="border-b">
-                            <td class="p-3">{{ rental.user.username }}</td>
-                            <td class="p-3">{{ rental.product.name }}</td>
-                            <td class="p-3">{{ rental.start_time|date:"Y-m-d" }}</td>
-                            <td class="p-3">
-                                {% if rental.end_time %}
-                                    {{ rental.end_time|date:"Y-m-d" }}
-                                {% else %}
-                                    <span class="text-red-600">Active</span>
-                                {% endif %}
-                            </td>
-                            <td class="p-3">${{ rental.total_fee|floatformat:2 }}</td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        {% else %}
-            <p class="text-gray-600">No recent rentals.</p>
-        {% endif %}
-    </div>
+  <!-- 🧾 Recent Rentals Table -->
+  <div class="bg-white shadow-lg rounded-2xl overflow-hidden">
+    <h2 class="text-2xl font-semibold text-slate-800 px-6 pt-6 mb-4">Recent Rentals</h2>
+    {% if recent_rentals %}
+      <div class="overflow-x-auto">
+        <table class="min-w-full text-sm text-left text-slate-700">
+          <thead class="bg-slate-100 text-slate-600 uppercase text-xs">
+            <tr>
+              <th class="px-6 py-3 whitespace-nowrap">User</th>
+              <th class="px-6 py-3 whitespace-nowrap">Product</th>
+              <th class="px-6 py-3 whitespace-nowrap">Start</th>
+              <th class="px-6 py-3 whitespace-nowrap">End</th>
+              <th class="px-6 py-3 whitespace-nowrap">Fee</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-100">
+            {% for rental in recent_rentals %}
+              <tr class="hover:bg-slate-50 transition-colors duration-200">
+                <td class="px-6 py-4">{{ rental.user.username }}</td>
+                <td class="px-6 py-4">{{ rental.product.name }}</td>
+                <td class="px-6 py-4">{{ rental.start_time|date:"Y-m-d" }}</td>
+                <td class="px-6 py-4">
+                  {% if rental.end_time %}
+                    {{ rental.end_time|date:"Y-m-d" }}
+                  {% else %}
+                    <span class="text-rose-500 font-medium">Active</span>
+                  {% endif %}
+                </td>
+                <td class="px-6 py-4 font-semibold text-green-500">${{ rental.total_fee|floatformat:2 }}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% else %}
+      <p class="px-6 py-4 text-slate-500">No recent rentals.</p>
+    {% endif %}
+  </div>
 {% endblock %}
