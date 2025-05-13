@@ -1,39 +1,35 @@
-version: "3.9"
-
 services:
   db:
     image: postgres:14
-    container_name: postgres_db
+    container_name: postgres
+    volumes:
+      - db_data:/var/lib/postgresql/data
     environment:
       - POSTGRES_DB=django_db
       - POSTGRES_USER=django_user
       - POSTGRES_PASSWORD=django_pass
-    volumes:
-      - db_data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
+    restart: unless-stopped
 
   web:
     build:
       context: .
-      dockerfile: Dockerfile.django
-    container_name: django_app
+      dockerfile: Dockerfile
+    container_name: django
     volumes:
-      - .:/usr/src/app  # การเชื่อมโยงโฟลเดอร์จากเครื่องโฮสต์ไปยังคอนเทนเนอร์
+      - .:/usr/src/app:rw
     ports:
       - "8000:8000"
     environment:
+      - PYTHONUNBUFFERED=1
       - POSTGRES_DB=django_db
       - POSTGRES_USER=django_user
       - POSTGRES_PASSWORD=django_pass
       - POSTGRES_HOST=db
     depends_on:
       - db
-    command: >
-      sh -c "if [ ! -f manage.py ]; then
-        django-admin startproject myproject .;
-      fi && python manage.py runserver 0.0.0.0:8000"
+    command: /bin/bash /usr/src/app/entrypoint.sh
 
-  
 volumes:
-  db_data:  # กำหนด volume สำหรับฐานข้อมูล PostgreSQL
+  db_data:
