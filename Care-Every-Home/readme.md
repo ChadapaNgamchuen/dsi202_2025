@@ -107,7 +107,6 @@ Planned improvements include:
 
 * Real-time delivery tracking
 * Direct chat between users and staff
-* QR code and bank transfer payment options
 * Mobile app
 * Admin analytics dashboard
 * Smart matching of donations to local needs
