@@ -74,6 +74,9 @@ The project was inspired by real challenges faced by individuals who lack access
 2. Click "Post Review", write feedback.
 3. Submit the review.
 
+![Flow](media/product/user_story_1_0.png)
+![Flow](media/product/user_story_2_0.png)
+![Flow](media/product/user_story_3_0.png)
 ---
 
 ##  Features
