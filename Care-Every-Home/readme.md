@@ -30,8 +30,8 @@ The project was inspired by real challenges faced by individuals who lack access
 
 ###  Providing Feedback
 
-* As a past renter or donor,
-* I want to leave feedback on my experience,
+* As a User,
+* I want to give feedback so that I can help improve the service and share my         experience,
 * So that the service can continuously improve.
 
 ---
