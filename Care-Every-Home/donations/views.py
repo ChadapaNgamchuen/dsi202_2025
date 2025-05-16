@@ -4,7 +4,7 @@ from django.http import HttpResponse
 from .models import DonationRequest
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
-from .forms import DonationRequestForm
+from .forms import DonationRequestForm, DonationOfferForm
 
 
 
@@ -21,19 +21,26 @@ def my_requests(request):
     requests = DonationRequest.objects.filter(requester=request.user)
     return render(request, 'donations/my_requests.html', {'requests': requests})
 
+
 @login_required
 def donation_offer(request, request_id):
-    donation_request = get_object_or_404(DonationRequest, id=request_id)
-    
-    if request.method == 'POST':
-        DonationOffer.objects.create(
-            donor=request.user,
-            donation_request=donation_request,
-        )
-        return redirect('browse_requests')
-    
-    return render(request, 'donations/donation_offer.html', {'donation_request': donation_request})
+    donation_request = get_object_or_404(DonationRequest, pk=request_id)
 
+    if request.method == 'POST':
+        form = DonationOfferForm(request.POST)
+        if form.is_valid():
+            offer = form.save(commit=False)
+            offer.request = donation_request
+            offer.donater = request.user
+            offer.save()
+            return redirect('browse_requests')
+    else:
+        form = DonationOfferForm()
+
+    return render(request, 'donations/donation_offer.html', {
+        'donation_request': donation_request,
+        'form': form
+    })
 
 @login_required
 def create_donation_request(request):

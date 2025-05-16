@@ -1,17 +1,131 @@
 {% extends 'myapp/base.html' %}
+{% load static %}
 {% block content %}
-<h2>คำขอของฉัน</h2>
 
-{% if requests %}
-  <ul>
+<!-- Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+
+<style>
+  :root {
+    --primary: #48c9b0;
+    --primary-dark: #2e9e8b;
+    --text-dark: #333;
+    --bg-light: #f9fdfb;
+  }
+
+  .my-requests-container {
+    max-width: 800px;
+    margin: 2.5rem auto;
+    padding: 2rem;
+    background-color: #ffffff;
+    border-radius: 20px;
+    box-shadow: 0 8px 22px rgba(72, 201, 176, 0.15);
+  }
+
+  .my-requests-container h2 {
+    text-align: center;
+    font-weight: 700;
+    font-size: 2rem;
+    color: var(--text-dark);
+    margin-bottom: 1.8rem;
+    position: relative;
+  }
+
+  .my-requests-container h2::after {
+    content: '';
+    display: block;
+    width: 80px;
+    height: 4px;
+    background-color: var(--primary);
+    border-radius: 2px;
+    margin: 12px auto 0;
+  }
+
+  .request-card {
+    background-color: #f8fffd;
+    border: 1px solid #e0f4f1;
+    border-radius: 15px;
+    padding: 1rem 1.4rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 4px 12px rgba(0, 160, 128, 0.08);
+    transition: 0.2s ease;
+  }
+
+  .request-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 160, 128, 0.12);
+  }
+
+  .request-card i {
+    color: var(--primary-dark);
+    margin-right: 0.5rem;
+  }
+
+  .request-text {
+    font-size: 1rem;
+    color: var(--text-dark);
+    font-weight: 500;
+  }
+
+  .empty-msg {
+    text-align: center;
+    font-size: 1.1rem;
+    color: #888;
+    margin-bottom: 1.5rem;
+  }
+
+  .btn-link {
+    display: inline-block;
+    margin-top: 1rem;
+    padding: 0.5rem 1.4rem;
+    border-radius: 25px;
+    border: 1px solid var(--primary);
+    color: var(--primary-dark);
+    text-decoration: none;
+    font-weight: 500;
+    transition: 0.3s ease;
+  }
+
+  .btn-link:hover {
+    background-color: var(--primary);
+    color: white;
+  }
+
+  .btn-group {
+    text-align: center;
+    margin-top: 2rem;
+  }
+
+</style>
+
+<div class="my-requests-container">
+  <h2><i class="fas fa-clipboard-list me-2"></i>คำขอของฉัน</h2>
+
+  {% if requests %}
     {% for req in requests %}
-      <li>{{ req.item_name }} จำนวน {{ req.quantity }} - {{ req.reason }}</li>
+      <div class="request-card">
+        <p class="request-text">
+          <i class="fas fa-box-open"></i>{{ req.item_name }} 
+          <span class="badge bg-secondary">{{ req.quantity }}</span> 
+          - {{ req.reason }}
+        </p>
+      </div>
     {% endfor %}
-  </ul>
-{% else %}
-    <p>คุณยังไม่มีคำร้องขอบริจาค</p>
-{% endif %}
-<a href="{% url 'create_request' %}">+ สร้างคำร้องใหม่</a>
+  {% else %}
+    <p class="empty-msg">
+      <i class="fas fa-info-circle me-1"></i>คุณยังไม่มีคำร้องขอบริจาค
+    </p>
+  {% endif %}
 
-<a href="{% url 'browse_requests' %}">← กลับไปดูคำร้องทั้งหมด</a>
+  <div class="btn-group">
+    <a href="{% url 'create_request' %}" class="btn-link">
+      <i class="fas fa-plus-circle me-1"></i>สร้างคำร้องใหม่
+    </a>
+    &nbsp;
+    <a href="{% url 'browse_requests' %}" class="btn-link">
+      <i class="fas fa-arrow-left me-1"></i>กลับไปดูคำร้องทั้งหมด
+    </a>
+  </div>
+</div>
+
 {% endblock %}
