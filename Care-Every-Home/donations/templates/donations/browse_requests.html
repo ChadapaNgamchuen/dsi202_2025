@@ -1,0 +1,11 @@
+<h2>คำร้องขอของบริจาค</h2>
+<ul>
+  {% for req in requests %}
+    <li>
+      <strong>{{ req.item_name }}</strong> ({{ req.quantity }})<br>
+      โดย {{ req.requester.username }} <br>
+      เหตุผล: {{ req.reason }}<br>
+      <a href="{% url 'donation_offer' req.id %}">บริจาคให้คำร้องนี้</a>
+    </li>
+  {% endfor %}
+</ul>

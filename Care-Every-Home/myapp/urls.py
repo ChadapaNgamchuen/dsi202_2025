@@ -1,10 +1,11 @@
-# myapp/urls.py
 from django.urls import path
+
 from .views import (
     home, ProductListView, ProductDetailView, RentProductView, 
     ProductListCreateAPIView, ProductRetrieveUpdateAPIView, 
     dashboard, toggle_favorite, FavoriteListView, toggle_cart, 
-    CartListView, user_profile, mark_payment, post_review, toggle_review_like, submit_review
+    CartListView, user_profile, mark_payment, post_review, toggle_review_like, submit_review,
+    browse_requests, donation_offer, my_requests
 )
 
 urlpatterns = [
@@ -24,4 +25,10 @@ urlpatterns = [
     path('products/<int:product_id>/review/', post_review, name='post_review'),
     path('review/<int:review_id>/like/', toggle_review_like, name='toggle_review_like'),
     path('rental/<int:rental_id>/review/', submit_review, name='submit_review'),
+
+    # คำร้องขอของบริจาค
+    path('requests/', browse_requests, name='browse_requests'),
+    path('requests/<int:request_id>/offer/', donation_offer, name='donation_offer'),
+    path('my-requests/', my_requests, name='my_requests'),
+
 ]

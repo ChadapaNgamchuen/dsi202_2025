@@ -1,0 +1,15 @@
+<h2>บริจาคให้คำร้อง: {{ req.item_name }}</h2>
+
+<form method="post">
+  {% csrf_token %}
+  <label>ของที่จะบริจาค:</label><br>
+  <input type="text" name="item" required><br>
+
+  <label>จำนวน:</label><br>
+  <input type="number" name="quantity" min="1" required><br>
+
+  <label>ข้อความเพิ่มเติม:</label><br>
+  <textarea name="message"></textarea><br>
+
+  <button type="submit">ส่งคำตอบรับ</button>
+</form>

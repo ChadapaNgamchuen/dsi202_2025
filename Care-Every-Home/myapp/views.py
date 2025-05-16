@@ -1,7 +1,7 @@
 # myapp/views.py
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import ListView, DetailView, CreateView
-from .models import Product, Rental, Category, Favorite, Cart, UserProfile, Donation, Review, ReviewLike
+from .models import Product, Rental, Category, Favorite, Cart, UserProfile, Donation, Review, ReviewLike,DonationRequest, DonationOffer
 from django.db.models import Q, Sum
 from .forms import RentalForm, UserProfileForm, DonationForm, ReviewForm
 from django.urls import reverse_lazy
@@ -262,3 +262,33 @@ def submit_review(request, rental_id):
         'form': form,
         'product': product,
     })
+
+@login_required
+def browse_requests(request):
+    requests = DonationRequest.objects.filter(fulfilled=False).order_by('-created_at')
+    return render(request, 'donations/browse_requests.html', {'requests': requests})
+
+@login_required
+def donation_offer(request, request_id):
+    donation_request = get_object_or_404(DonationRequest, id=request_id)
+
+    if request.method == 'POST':
+        item = request.POST.get('item')
+        quantity = request.POST.get('quantity')
+        message = request.POST.get('message', '')
+
+        DonationOffer.objects.create(
+            request=donation_request,
+            donater=request.user,
+            offer_item_description=item,
+            offer_quantity=quantity,
+            message=message
+        )
+        return redirect('browse_requests')
+
+    return render(request, 'donations/donation_offer.html', {'req': donation_request})
+
+@login_required
+def my_requests(request):
+    requests = DonationRequest.objects.filter(requester=request.user)
+    return render(request, 'donations/my_requests.html', {'requests': requests})

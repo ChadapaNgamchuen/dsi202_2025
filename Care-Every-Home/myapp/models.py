@@ -154,7 +154,7 @@ class Rental(models.Model):
         return f"{self.user.username} - {self.product.name} ({self.status})"
 
 class Donation(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE,related_name="myapp_donations")
     product_name = models.CharField(max_length=255)
     description = models.TextField(blank=True)
     image = models.ImageField(upload_to='donations/', blank=True, null=True)
@@ -163,3 +163,26 @@ class Donation(models.Model):
 
     def __str__(self):
         return f"{self.user.username} donated {self.product_name}"
+
+class DonationRequest(models.Model):
+    requester = models.ForeignKey(User, on_delete=models.CASCADE, related_name="myapp_requests")
+    item_name = models.CharField(max_length=255)
+    quantity = models.PositiveIntegerField()
+    reason = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    fulfilled = models.BooleanField(default=False)  # ไม่ต้องตั้ง True ทันที
+
+    def __str__(self):
+        return f"{self.item_name} x{self.quantity} by {self.requester.username}"
+
+class DonationOffer(models.Model):
+    request = models.ForeignKey(DonationRequest, on_delete=models.CASCADE, related_name='myapp_offers')
+    donater = models.ForeignKey(User, on_delete=models.CASCADE, related_name='myapp_offers')
+    message = models.TextField(blank=True)
+    offer_item_description = models.CharField(max_length=255)  # อธิบายสิ่งที่จะบริจาค
+    offer_quantity = models.PositiveIntegerField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    accepted = models.BooleanField(default=False)  # ถ้า requester กดตอบรับ ก็ค่อย mark true
+
+    def __str__(self):
+        return f"{self.donater.username} offers to {self.request.item_name}"
