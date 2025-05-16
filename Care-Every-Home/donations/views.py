@@ -1,7 +1,53 @@
 from django.http import HttpResponse
+# import json
+from django.shortcuts import render
+# from django.views.decorators.csrf import csrf_exempt
+from .models import DonationRequest
+from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib.auth.decorators import login_required
+from myapp.forms import DonationRequestForm
+
+
 
 def home(request):
     return HttpResponse("Hello from donations!")
 
 def browse_requests(request):
-    return HttpResponse("This is browse_requests page.")
+    requests = DonationRequest.objects.all()
+    return render(request, 'donations/browse_requests.html', {'requests': requests})
+
+def my_request(request):
+    requests = DonationRequest.objects.all()
+    return render(request, 'donations/my_requests.html', {'requests': requests})
+
+@login_required
+def my_requests(request):
+    requests = DonationRequest.objects.filter(requester=request.user)
+    return render(request, 'donations/my_requests.html', {'requests': requests})
+
+@login_required
+def donation_offer(request, request_id):
+    donation_request = get_object_or_404(DonationRequest, id=request_id)
+    
+    if request.method == 'POST':
+        DonationOffer.objects.create(
+            donor=request.user,
+            donation_request=donation_request,
+        )
+        return redirect('browse_requests')
+    
+    return render(request, 'donations/donation_offer.html', {'donation_request': donation_request})
+
+
+@login_required
+def create_donation_request(request):
+    if request.method == 'POST':
+        form = DonationRequestForm(request.POST)
+        if form.is_valid():
+            donation_request = form.save(commit=False)
+            donation_request.requester = request.user
+            donation_request.save()
+            return redirect('my_requests')
+    else:
+        form = DonationRequestForm()
+    return render(request, 'donations/create_request.html', {'form': form})

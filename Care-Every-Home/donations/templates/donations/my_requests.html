@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'myapp/base.html' %}
 {% load static %}
 
 {% block content %}
@@ -24,6 +24,7 @@
 {% else %}
     <p>คุณยังไม่มีคำร้องขอบริจาค</p>
 {% endif %}
+<a href="{% url 'create_request' %}">+ สร้างคำร้องใหม่</a>
 
 <a href="{% url 'browse_requests' %}">← กลับไปดูคำร้องทั้งหมด</a>
 {% endblock %}
