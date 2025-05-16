@@ -1,6 +1,6 @@
 # myapp/forms.py
 from django import forms
-from .models import Rental, UserProfile, Donation, Review, USER_TYPE_CHOICES,DonationRequest
+from .models import Rental, UserProfile, Donation, Review, USER_TYPE_CHOICES
 
 
 class RentalForm(forms.ModelForm):
@@ -45,8 +45,3 @@ class ReviewForm(forms.ModelForm):
             'content': forms.Textarea(attrs={'rows': 4, 'class': 'w-full p-3 border border-[#009aa6] rounded-lg'}),
             'rating': forms.Select(choices=[(i, f"{i} Star{'s' if i > 1 else ''}") for i in range(1, 6)], attrs={'class': 'w-full p-3 border border-[#009aa6] rounded-lg'}),
         }
-
-class DonationRequestForm(forms.ModelForm):
-    class Meta:
-        model = DonationRequest
-        fields = ['item_name', 'quantity', 'reason']

@@ -3,9 +3,9 @@
 <h2>สร้างคำร้องขอบริจาค</h2>
 
 <form method="post">
-  {% csrf_token %}
-  {{ form.as_p }}
-  <button type="submit">ส่งคำร้อง</button>
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">ส่งคำขอ</button>
 </form>
 
 <a href="{% url 'my_requests' %}">← ดูคำร้องของฉัน</a>

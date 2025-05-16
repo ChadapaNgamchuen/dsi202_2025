@@ -1,18 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
 
-
-class Donation(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='donations_donations')
-    product_name = models.CharField(max_length=255)
-    description = models.TextField(blank=True)
-    image = models.ImageField(upload_to='donations/', blank=True, null=True)
-    accepted = models.BooleanField(default=False)
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return f"{self.user.username} donated {self.product_name}"
-
 class DonationRequest(models.Model):
     requester = models.ForeignKey(User, on_delete=models.CASCADE, related_name='donations_requests')
     item_name = models.CharField(max_length=255)
@@ -35,4 +23,4 @@ class DonationOffer(models.Model):
     def __str__(self):
         return f"{self.donater.username} offers to {self.request.item_name}"
 
-# Create your models here.
+

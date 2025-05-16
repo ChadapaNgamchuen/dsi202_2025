@@ -1,26 +1,13 @@
 {% extends 'myapp/base.html' %}
-{% load static %}
-
 {% block content %}
-<h2>คำร้องขอบริจาคของฉัน</h2>
+<h2>คำขอของฉัน</h2>
 
 {% if requests %}
-    <ul>
+  <ul>
     {% for req in requests %}
-        <li style="margin-bottom: 20px;">
-            <strong>รายการ:</strong> {{ req.item_name }} <br>
-            <strong>จำนวน:</strong> {{ req.quantity }} <br>
-            <strong>เหตุผล:</strong> {{ req.reason }} <br>
-            <strong>วันที่ขอ:</strong> {{ req.created_at|date:"d/m/Y H:i" }} <br>
-            <strong>สถานะ:</strong>
-            {% if req.fulfilled %}
-                ✅ ได้รับการตอบรับแล้ว
-            {% else %}
-                ⏳ ยังไม่มีผู้ตอบรับ
-            {% endif %}
-        </li>
+      <li>{{ req.item_name }} จำนวน {{ req.quantity }} - {{ req.reason }}</li>
     {% endfor %}
-    </ul>
+  </ul>
 {% else %}
     <p>คุณยังไม่มีคำร้องขอบริจาค</p>
 {% endif %}
