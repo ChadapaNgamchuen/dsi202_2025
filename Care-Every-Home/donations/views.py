@@ -1,20 +1,20 @@
 from django.http import HttpResponse
-# import json
-# from django.views.decorators.csrf import csrf_exempt
-from .models import DonationRequest
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 from .forms import DonationRequestForm, DonationOfferForm
-
-
+from .models import DonationRequest, DonationOffer
+from django.contrib.auth.models import User
 
 
 def home(request):
     return HttpResponse("Hello from donations!")
 
+
 def browse_requests(request):
-    requests = DonationRequest.objects.all()
-    return render(request, 'donations/browse_requests.html', {'donation_requests': requests})
+    donation_requests = DonationRequest.objects.filter(fulfilled=False).order_by('-created_at')
+    return render(request, 'donations/browse_requests.html', {'donation_requests': donation_requests})
+
 
 @login_required
 def my_requests(request):
@@ -33,7 +33,16 @@ def donation_offer(request, request_id):
             offer.request = donation_request
             offer.donater = request.user
             offer.save()
-            return redirect('browse_requests')
+
+            donation_request.fulfilled = True
+            donation_request.save()
+            print("✅ fulfilled set to True for request ID:", donation_request.id)
+
+            messages.success(request, "คุณได้บริจาคเรียบร้อยแล้ว")
+            return redirect('my_donations')
+        else:
+            print("❌ Form Errors:", form.errors)
+            messages.error(request, "มีบางอย่างผิดพลาดในการส่งฟอร์ม")
     else:
         form = DonationOfferForm()
 
@@ -42,20 +51,27 @@ def donation_offer(request, request_id):
         'form': form
     })
 
+
 @login_required
 def create_donation_request(request):
     if request.method == 'POST':
-        print("POST DATA:", request.POST)  # ✅ เพิ่มบรรทัดนี้
+        print("POST DATA:", request.POST)
         form = DonationRequestForm(request.POST)
         if form.is_valid():
-            print("Form is valid")  # ✅ debug ตรงนี้ด้วย
+            print("Form is valid")
             donation_request = form.save(commit=False)
             donation_request.requester = request.user
             donation_request.save()
-            print("Saved successfully")  # ✅ confirm การ save
+            print("Saved successfully")
             return redirect('my_requests')
         else:
-            print("Form errors:", form.errors)  
+            print("Form errors:", form.errors)
     else:
         form = DonationRequestForm()
     return render(request, 'donations/create_request.html', {'form': form})
+
+
+@login_required
+def my_donations(request):
+    offers = DonationOffer.objects.filter(donater=request.user).select_related('request').order_by('-created_at')
+    return render(request, 'donations/my_donations.html', {'offers': offers})

@@ -13,7 +13,7 @@ class DonationRequest(models.Model):
         return f"{self.item_name} x{self.quantity} by {self.requester.username}"
 
 class DonationOffer(models.Model):
-    request = models.ForeignKey(DonationRequest, on_delete=models.CASCADE, related_name='offers')
+    request = models.ForeignKey(DonationRequest, on_delete=models.CASCADE, related_name='offers', null=True)
     donater = models.ForeignKey(User, on_delete=models.CASCADE, related_name='donation_offers')
     offer_item_description = models.CharField(max_length=255)
     offer_quantity = models.PositiveIntegerField()
