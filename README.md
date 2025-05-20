@@ -34,6 +34,12 @@ The project was inspired by real challenges faced by individuals who lack access
 * I want to leave feedback on my experience,
 * So that the service can continuously improve.
 
+###  Responding to Donation Requests
+
+* As a user who has medical equipment to donate,  
+* I want to view a list of specific donation requests from people in need,  
+* So that I can choose to respond and send equipment to help someone directly.
+
 ---
 
 ##  How to Use the Platform
@@ -73,6 +79,37 @@ The project was inspired by real challenges faced by individuals who lack access
 1. Go to "Product Detail" or "Profile".
 2. Click "Post Review", write feedback.
 3. Submit the review.
+
+### 7. Respond to Donation Requests
+
+1. Go to "Browse Requests" under the "Donate" section.
+2. Review requests submitted by users.
+3. Click "Donate" next to the request you want to fulfill.
+4. Fill in donation details and confirm.
+5. Requester will be notified and status updated in your donation dashboard.
+
++--------------------+
+| User in Need       |
+| requests donation  |
++--------------------+
+          ↓
++--------------------+
+| Donater views      |
+| "Browse Requests"  |
++--------------------+
+          ↓
++--------------------+
+| Selects a request  |
++--------------------+
+          ↓
++-----------------------------+
+| Fills in donation details   |
++-----------------------------+
+          ↓
++--------------------+
+| System notifies    |
+| the requester      |
++--------------------+
 
 ---
 
