@@ -1,11 +1,12 @@
 from django.urls import path
-
+from django.conf import settings
+from django.conf.urls.static import static
 from .views import (
     home, ProductListView, ProductDetailView, RentProductView, 
     ProductListCreateAPIView, ProductRetrieveUpdateAPIView, 
     dashboard, toggle_favorite, FavoriteListView, toggle_cart, 
     CartListView, user_profile, mark_payment, post_review, toggle_review_like, submit_review,
-    browse_requests, donation_offer, my_requests
+    browse_requests, donation_offer, my_requests,checkout
 )
 
 urlpatterns = [
@@ -30,5 +31,10 @@ urlpatterns = [
     path('requests/', browse_requests, name='browse_requests'),
     path('requests/<int:request_id>/offer/', donation_offer, name='donation_offer'),
     path('my-requests/', my_requests, name='my_requests'),
+    path('checkout/', checkout, name='checkout')
 
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    

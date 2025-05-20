@@ -21,6 +21,7 @@ services:
     container_name: django
     volumes:
       - .:/usr/src/app:rw
+      - ./media:/usr/src/app/media
     ports:
       - "8000:8000"
     environment:

@@ -23,3 +23,4 @@ class DonationOffer(models.Model):
 
     def __str__(self):
         return f"{self.donater.username} offers {self.offer_quantity} x {self.offer_item_description} to {self.request.item_name}"
+    

@@ -1,7 +1,7 @@
 # myapp/views.py
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import ListView, DetailView, CreateView
-from .models import Product, Rental, Category, Favorite, Cart, UserProfile, Donation, Review, ReviewLike,DonationRequest, DonationOffer
+from .models import Product, Rental, Category, Favorite, Cart, UserProfile, Donation, Review, ReviewLike,DonationRequest, Cart
 from django.db.models import Q, Sum
 from .forms import RentalForm, UserProfileForm, DonationForm, ReviewForm
 from django.urls import reverse_lazy
@@ -11,6 +11,11 @@ from .serializers import ProductSerializer
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.utils import timezone
+from .promptpay_qr import generate_promptpay_qr_payload
+import qrcode
+import os
+from django.conf import settings
+
 
 def home(request):
     return render(request, 'myapp/home.html')
@@ -190,7 +195,7 @@ def dashboard(request):
     recent_rentals = Rental.objects.order_by('-start_date')[:5]
     total_stock = Product.objects.aggregate(total=Sum('stock'))['total'] or 0
     category_count = Category.objects.count()
-
+    recent_donation_offers = DonationOffer.objects.select_related('donater', 'request').order_by('-created_at')[:5]
     context = {
         'total_products': total_products,
         'available_products': available_products,
@@ -200,6 +205,7 @@ def dashboard(request):
         'recent_rentals': recent_rentals,
         'total_stock': total_stock,
         'category_count': category_count,
+        'recent_donation_offers': recent_donation_offers,
     }
     return render(request, 'myapp/dashboard.html', context)
 
@@ -292,3 +298,30 @@ def donation_offer(request, request_id):
 def my_requests(request):
     requests = DonationRequest.objects.filter(requester=request.user)
     return render(request, 'donations/my_requests.html', {'requests': requests})
+
+
+def checkout(request):
+    cart_items = Cart.objects.filter(user=request.user)
+    total_price = sum(item.product.monthly_rate for item in cart_items)
+
+    qr_code_url = None
+    if total_price > 0:
+        phone_number = '0944260888'  # ✅ ใส่เบอร์ 10 หลัก (ไม่ต้องมี +66)
+        payload = generate_promptpay_qr_payload(mobile=phone_number, amount=total_price)
+
+        img = qrcode.make(payload)
+        qr_dir = os.path.join(settings.MEDIA_ROOT, 'qr_codes')
+        os.makedirs(qr_dir, exist_ok=True)
+
+        qr_filename = f'qr_user_{request.user.id}.png'
+        qr_path = os.path.join(qr_dir, qr_filename)
+        img.save(qr_path)
+
+        qr_code_url = settings.MEDIA_URL + f'qr_codes/{qr_filename}'
+
+    return render(request, 'myapp/checkout.html', {
+        'cart_items': cart_items,
+        'total_price': total_price,
+        'qr_code_url': qr_code_url,
+        'promptpay_payload': payload if total_price > 0 else None,
+    })

@@ -5,6 +5,7 @@ from django.utils.timezone import now
 from decimal import Decimal
 from datetime import timedelta
 
+
 # User Type Choices
 USER_TYPE_CHOICES = (
     ('renter', 'Renter'),
@@ -186,3 +187,9 @@ class DonationOffer(models.Model):
 
     def __str__(self):
         return f"{self.donater.username} offers to {self.request.item_name}"
+    
+
+
+    
+
+
