@@ -200,6 +200,6 @@ python manage.py runserver
 ```
 
 Once running, visit `http://127.0.0.1:8000/` in your browser to use the platform locally.
-
+youtube:https://youtu.be/QGGe0VhAvho
 ---
 "
